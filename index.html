@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Emprunt Quest – Les emprunts bancaires</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f8;--sf:#fff;--ink:#0d2438;--mut:#53687c;--ac:#00406f;--sky:#00ade6;--gold:#e0a11b;--ok:#1b8a5a;--bad:#c8383e;--ln:#cfd9e4;--tint:#e3f4fb;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1622;--sf:#12263a;--ink:#e8f0f8;--mut:#9db3c7;--ac:#6cc8f0;--ln:#25405a;--tint:#14354d;--ok:#4ec28f;--bad:#f0777c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1622;--sf:#12263a;--ink:#e8f0f8;--mut:#9db3c7;--ac:#6cc8f0;--ln:#25405a;--tint:#14354d;--ok:#4ec28f;--bad:#f0777c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Public Sans",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--ac);margin:0 0 .4em;line-height:1.15}
+h1{font-size:1.9rem;font-weight:800}h2{font-size:1.45rem}h3{font-size:1.1rem}
+header{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding:8px 0 16px}
+.stats{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.xp{min-width:150px}.xp b{font-family:"Bricolage Grotesque";font-size:1.2rem;color:var(--gold)}
+.meter{height:8px;border-radius:6px;background:var(--ln);overflow:hidden}.meter i{display:block;height:100%;background:var(--sky);width:0;transition:width .5s}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.bd{font-size:.8rem;padding:3px 10px;border-radius:99px;border:1px dashed var(--ln);color:var(--mut)}
+.bd.on{border:1px solid var(--gold);background:var(--gold);color:#2a1d00;font-weight:600}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+nav button{flex:1 1 200px;text-align:left;padding:10px 14px;border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:10px;cursor:pointer;font:inherit}
+nav button[aria-selected=true]{border-color:var(--sky);box-shadow:inset 0 -4px 0 var(--sky)}
+nav b{display:block;font-family:"Bricolage Grotesque";color:var(--ac)}
+nav .meter{margin-top:6px}
+section{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:20px}
+section[hidden]{display:none}
+.card{border:1px solid var(--ln);border-radius:10px;padding:14px;margin:14px 0;background:var(--sf)}
+button.b{font:600 1rem "Public Sans";background:var(--ac);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+:root[data-theme="dark"] button.b{color:#06202f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.b{color:#06202f}}
+button.alt{background:var(--tint);color:var(--ink);border:1px solid var(--ln)}
+button.alt[aria-pressed=true]{border-color:var(--sky);background:var(--sky);color:#00263a}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+input,select{font:inherit;color:var(--ink);background:var(--sf);border:1px solid var(--ln);border-radius:6px;padding:7px 8px}
+input[type=number]{width:120px}
+.fb{min-height:1.5em;margin-top:8px;font-weight:500}.fb.ok{color:var(--ok)}.fb.ko{color:var(--bad)}
+.bubbles{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+.grp{border:2px dashed var(--ln);border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;position:relative;padding-top:26px}
+.grp small{position:absolute;top:4px;left:12px;color:var(--mut)}
+.bub{padding:10px 14px;border-radius:12px;border:0;background:var(--ac);color:#fff;font:600 .95rem "Public Sans";cursor:pointer}
+:root[data-theme="dark"] .bub{color:#06202f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bub{color:#06202f}}
+.bub[aria-pressed=true]{outline:3px solid var(--gold)}
+.bub.hot{background:var(--sky);color:#00263a}
+#info{margin-top:14px;background:var(--tint);border-radius:10px;padding:14px;min-height:70px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px;font-variant-numeric:tabular-nums}
+th{background:var(--ac);color:#fff;font-weight:600;padding:8px;font-size:.85rem}
+:root[data-theme="dark"] th{color:#06202f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) th{color:#06202f}}
+td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--ln)}td:first-child{text-align:left;font-weight:600}
+.bar{display:flex;height:10px;min-width:70px;border-radius:5px;overflow:hidden;background:var(--sky)}.bar i{background:var(--gold)}
+.sl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.sl label{display:block;font-weight:600}.sl input{width:100%;padding:0}
+.leg{font-size:.85rem;color:var(--mut)}
+.ledger{width:100%;min-width:0}
+.ledger td{text-align:left}.ledger select,.ledger input{width:100%}
+.ledger input[type=number]{width:100%}
+.tw .ledger{min-width:520px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--gold);color:#2a1d00;padding:10px 18px;border-radius:10px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .3s;z-index:20;text-align:center}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div><h1>Emprunt Quest</h1><div class="leg">Maîtrise l’emprunt bancaire, du taux à l’écriture comptable.</div></div>
+ <div class="stats">
+  <div class="xp"><b id="xp">0 XP</b> · niveau <span id="lvl">1</span><div class="meter"><i id="xpb"></i></div></div>
+  <button class="b alt" id="snd" aria-pressed="true">Son activé</button>
+ </div>
+</header>
+<div class="badges" id="badges" style="margin-bottom:14px"></div>
+<nav id="nav" role="tablist">
+ <button role="tab" data-m="m1" aria-selected="true"><b>1. L’odyssée du financement</b>Principes généraux<div class="meter"><i id="p1"></i></div></button>
+ <button role="tab" data-m="m2" aria-selected="false"><b>2. Les trois visages du remboursement</b>Tableaux d’amortissement<div class="meter"><i id="p2"></i></div></button>
+ <button role="tab" data-m="m3" aria-selected="false"><b>3. Le coffre-fort comptable</b>Écritures au journal<div class="meter"><i id="p3"></i></div></button>
+</nav>
+
+<section id="m1">
+ <h2>D’où vient l’argent d’une entreprise ?</h2>
+ <p>Touche chaque bulle pour découvrir le financement correspondant.</p>
+ <div class="bubbles">
+  <button class="bub" data-k="auto">Autofinancement</button>
+  <div class="grp"><small>Financements externes</small>
+   <button class="bub" data-k="cp">Capitaux propres</button>
+   <button class="bub" data-k="sub">Subventions et aides publiques</button>
+   <div class="grp"><small>Financements bancaires</small>
+    <button class="bub" data-k="bail">Crédit-bail</button>
+    <button class="bub hot" data-k="emp">Emprunts</button>
+   </div>
+  </div>
+ </div>
+ <div id="info" aria-live="polite">Choisis une bulle.</div>
+ <div class="card">
+  <h3>Défi : calcule l’intérêt de l’année</h3>
+  <p class="leg">Intérêts périodiques = capital restant dû × taux d’intérêt</p>
+  <p id="q1" style="font-weight:600"></p>
+  <input type="number" id="a1" step="any" aria-label="Intérêts en euros"> € <button class="b" id="c1">Valider</button>
+  <div class="fb" id="f1"></div>
+ </div>
+</section>
+
+<section id="m2" hidden>
+ <h2>Un même emprunt, trois façons de le rembourser</h2>
+ <p>Règle le simulateur : l’exemple du cours est 60 000 €, 4 %, 6 ans.</p>
+ <div class="sl">
+  <label>Capital : <span id="vC"></span><input type="range" id="rC" min="10000" max="200000" step="5000" value="60000"></label>
+  <label>Taux : <span id="vR"></span><input type="range" id="rR" min="1" max="8" step="0.25" value="4"></label>
+  <label>Durée : <span id="vN"></span><input type="range" id="rN" min="2" max="10" step="1" value="6"></label>
+ </div>
+ <div role="group" aria-label="Mode de remboursement" style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="b alt" data-md="fine" aria-pressed="false">In fine</button>
+  <button class="b alt" data-md="const" aria-pressed="true">Amortissement constant</button>
+  <button class="b alt" data-md="ann" aria-pressed="false">Annuité constante</button>
+ </div>
+ <p id="mdd" style="margin:10px 0"></p>
+ <div class="tw"><table id="tab"></table></div>
+ <p class="leg">La barre dorée montre la part d’intérêts dans l’annuité, la bleue la part de capital remboursé.</p>
+
+ <div class="card">
+  <h3>Défi 1 : choisis le bon mode</h3>
+  <div id="sc"></div>
+ </div>
+ <div class="card">
+  <h3>Défi 2 : complète la ligne N+1</h3>
+  <p>Amortissement constant, 60 000 € à 4 % sur 6 ans. En début d’année N+1, il reste 50 000 € à rembourser.</p>
+  <div class="tw"><table><tr><th>Capital début</th><th>Intérêts</th><th>Amortissement</th><th>Annuité</th><th>Capital fin</th></tr>
+  <tr><td style="text-align:right">50 000 €</td><td><input type="number" id="t0" step="any"></td><td><input type="number" id="t1" step="any"></td><td><input type="number" id="t2" step="any"></td><td><input type="number" id="t3" step="any"></td></tr></table></div>
+  <p><button class="b" id="ct">Valider la ligne</button></p>
+  <div class="fb" id="ft"></div>
+ </div>
+</section>
+
+<section id="m3" hidden>
+ <h2>Tu es le comptable</h2>
+ <p>Pour chaque ligne, choisis le compte, le sens et le montant. Laisse vide les lignes inutiles. Les étapes A et B suivent un remboursement par amortissement constant ; les étapes C, D et E couvrent l’in fine et l’annuité constante (60 000 € à 4 % sur 6 ans).</p>
+ <div class="card">
+  <h3>Étape A : la souscription de l’emprunt</h3>
+  <p>La banque verse 60 000 € sur le compte de l’entreprise. Enregistre l’écriture.</p>
+  <div class="tw"><table class="ledger" id="jA"></table></div>
+  <button class="b" data-j="A">Passer l’écriture</button><div class="fb" id="fA"></div>
+ </div>
+ <div class="card">
+  <h3>Étape B : première annuité, amortissement constant</h3>
+  <p>Premier paiement : 10 000 € de capital remboursé et 2 400 € d’intérêts (60 000 × 4 %).</p>
+  <div class="tw"><table class="ledger" id="jB"></table></div>
+  <button class="b" data-j="B">Passer l’écriture</button><div class="fb" id="fB"></div>
+ </div>
+ <div class="card">
+  <h3>Étape C : remboursement in fine, première année</h3>
+  <p>Autre emprunt : 60 000 € à 4 %, remboursé in fine. À la fin de l’année N, l’entreprise paie uniquement les intérêts. Enregistre le paiement.</p>
+  <div class="tw"><table class="ledger" id="jC"></table></div>
+  <button class="b" data-j="C">Passer l’écriture</button><div class="fb" id="fC"></div>
+ </div>
+ <div class="card">
+  <h3>Étape D : remboursement in fine, dernière échéance</h3>
+  <p>Même emprunt, à l’échéance finale (N+5) : l’entreprise rembourse les 60 000 € de capital et paie les 2 400 € d’intérêts, soit 62 400 €.</p>
+  <div class="tw"><table class="ledger" id="jD"></table></div>
+  <button class="b" data-j="D">Passer l’écriture</button><div class="fb" id="fD"></div>
+ </div>
+ <div class="card">
+  <h3>Étape E : annuité constante, première échéance</h3>
+  <p>Emprunt de 60 000 € à 4 % sur 6 ans, remboursé par annuité constante de 11 445,71 €. Intérêts de l’année N : 2 400 €, donc amortissement de l’emprunt : 11 445,71 − 2 400 = 9 045,71 €.</p>
+  <div class="tw"><table class="ledger" id="jE"></table></div>
+  <button class="b" data-j="E">Passer l’écriture</button><div class="fb" id="fE"></div>
+ </div>
+</section>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const f2=n=>n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+const f0=n=>n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' €';
+let xp=0,soundOn=true,done={m1:0,m2:0,m3:0};const tot={m1:3,m2:4,m3:5},solved=new Set(),got=new Set();
+const BAD=[['b1','Premier intérêt'],['b2','Maître du Tableau'],['b3','As de la Comptabilité'],['b4','Zéro TVA']];
+
+/* Sons (Web Audio) */
+let AC;
+function tone(f,t,d,ty='sine',v=.15){if(!soundOn)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),T=AC.currentTime+t;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(v,T);g.gain.exponentialRampToValueAtTime(.001,T+d);o.connect(g);g.connect(AC.destination);o.start(T);o.stop(T+d)}catch(e){}}
+const S={ok:()=>{tone(880,0,.15);tone(1320,.12,.28)},bad:()=>tone(170,0,.28,'square',.08),coin:()=>{tone(1568,0,.08,'triangle');tone(2093,.09,.4,'triangle')},win:()=>[523,659,784,1047].forEach((f,i)=>tone(f,i*.12,.3,'triangle'))};
+
+/* Gamification */
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function render(){$('#xp').textContent=xp+' XP';const l=Math.floor(xp/50)+1;$('#lvl').textContent=l;$('#xpb').style.width=(xp%50)*2+'%';
+ ['m1','m2','m3'].forEach((m,i)=>$('#p'+(i+1)).style.width=done[m]/tot[m]*100+'%');
+ $('#badges').innerHTML=BAD.map(b=>`<span class="bd ${got.has(b[0])?'on':''}">${got.has(b[0])?'🏅 ':''}${b[1]}</span>`).join('')}
+function badge(id){if(got.has(id))return;got.add(id);S.win();toast('Badge débloqué : '+BAD.find(b=>b[0]==id)[1]);render()}
+function win(id,m,pts){if(solved.has(id))return;solved.add(id);xp+=pts;done[m]++;
+ if(done.m1>=3)badge('b1');if(done.m2>=4)badge('b2');if(done.m3>=5)badge('b3');render()}
+function say(el,ok,msg){el.className='fb '+(ok?'ok':'ko');el.textContent=msg;ok?S.ok():S.bad()}
+$('#snd').onclick=e=>{soundOn=!soundOn;e.target.setAttribute('aria-pressed',soundOn);e.target.textContent=soundOn?'Son activé':'Son coupé'};
+$$('#nav button').forEach(b=>b.onclick=()=>{$$('#nav button').forEach(x=>x.setAttribute('aria-selected',x==b));['m1','m2','m3'].forEach(m=>$('#'+m).hidden=m!=b.dataset.m)});
+
+/* Module 1 */
+const INFO={auto:['Autofinancement','L’entreprise finance ses projets avec ses propres ressources. Ce n’est pas un financement externe.'],
+cp:['Capitaux propres','Apportés par les actionnaires. C’est un financement externe.'],
+sub:['Subventions et aides publiques','Versées par des organisations publiques.'],
+bail:['Crédit-bail','Un autre financement bancaire, distinct de l’emprunt.'],
+emp:['Emprunt','Une somme d’argent (le capital) mise à disposition par un établissement financier, le prêteur. L’emprunteur la rembourse avec intérêts, sur une durée d’un an à plus de vingt ans. Intérêts périodiques = capital restant dû × taux d’intérêt. Le taux peut être fixe ou variable. Chaque paiement = amortissement du capital + intérêts.']};
+$$('.bub').forEach(b=>b.onclick=()=>{$$('.bub').forEach(x=>x.setAttribute('aria-pressed',x==b));const i=INFO[b.dataset.k];$('#info').innerHTML=`<h3>${i[0]}</h3>${i[1]}`});
+const Q=[[20000,5],[60000,4],[150000,3],[80000,2.5],[45000,6]].sort(()=>Math.random()-.5);let qi=0;
+function q1(){const[c,r]=Q[qi%Q.length];$('#q1').textContent=`Capital restant dû : ${f0(c)}, taux fixe : ${String(r).replace('.',',')} %. Quels sont les intérêts de l’année ?`;$('#a1').value=''}
+$('#c1').onclick=()=>{if(solved.has('q1-'+qi)||done.m1>=3&&qi>=3){return}const[c,r]=Q[qi%Q.length],ans=c*r/100,v=parseFloat($('#a1').value);
+ if(Math.abs(v-ans)<.01){say($('#f1'),true,`Exact : ${f0(c)} × ${r} % = ${f0(ans)}. +10 XP`);win('q1-'+qi,'m1',10);qi++;
+  if(done.m1>=3){$('#f1').textContent+=' Module terminé !';}else setTimeout(q1,900)}
+ else say($('#f1'),false,'Pas tout à fait. Multiplie le capital par le taux (en divisant le taux par 100).')};
+q1();
+
+/* Module 2 */
+let mode='const';
+const DESC={fine:'In fine : le capital est remboursé en une seule fois au terme de l’emprunt. Les intérêts sont payés chaque année.',
+const:'Amortissement constant : le capital est remboursé par parts égales (capital ÷ nombre d’échéances). Les annuités diminuent.',
+ann:'Annuité constante : les paiements sont identiques chaque année. La part de capital augmente, celle des intérêts diminue.'};
+const r2=x=>Math.round(x*100)/100;
+function sched(m,C,r,n){const i=r/100,a=C*i/(1-Math.pow(1+i,-n));let K=C;const R=[];
+ for(let k=0;k<n;k++){const it=r2(K*i);let am=m=='fine'?0:m=='const'?r2(C/n):a-it;if(k==n-1)am=K;am=r2(am);R.push({y:k?'N+'+k:'N',K,it,am,an:r2(it+am),Kf:r2(K-am)});K=r2(K-am)}return R}
+function sim(){const C=+$('#rC').value,r=+$('#rR').value,n=+$('#rN').value;
+ $('#vC').textContent=f0(C);$('#vR').textContent=String(r).replace('.',',')+' %';$('#vN').textContent=n+' ans';$('#mdd').textContent=DESC[mode];
+ $('#tab').innerHTML='<tr><th>Année</th><th>Capital début</th><th>Intérêts</th><th>Amortissement</th><th>Annuité</th><th>Capital fin</th><th></th></tr>'+
+ sched(mode,C,r,n).map(x=>`<tr><td>${x.y}</td><td>${f2(x.K)}</td><td>${f2(x.it)}</td><td>${f2(x.am)}</td><td>${f2(x.an)}</td><td>${f2(x.Kf)}</td><td><div class="bar"><i style="width:${x.it/x.an*100}%"></i></div></td></tr>`).join('')}
+['rC','rR','rN'].forEach(i=>$('#'+i).oninput=sim);
+$$('[data-md]').forEach(b=>b.onclick=()=>{mode=b.dataset.md;$$('[data-md]').forEach(x=>x.setAttribute('aria-pressed',x==b));sim()});sim();
+const SC=[['Une jeune entreprise veut ne payer que des intérêts pendant la durée du prêt et rembourser tout le capital à la fin.','fine'],
+['Une PME veut payer exactement la même somme chaque année pour faciliter son budget.','ann'],
+['Une société veut rembourser le même montant de capital chaque année, quitte à payer plus au début.','const']];
+const NM={fine:'In fine',const:'Amortissement constant',ann:'Annuité constante'};
+$('#sc').innerHTML=SC.map((s,i)=>`<div style="margin-bottom:14px"><p>${s[0]}</p>${Object.keys(NM).map(k=>`<button class="b alt" data-s="${i}" data-k="${k}">${NM[k]}</button> `).join('')}<div class="fb" id="fs${i}"></div></div>`).join('');
+$$('[data-s]').forEach(b=>b.onclick=()=>{const i=+b.dataset.s;if(solved.has('s'+i))return;
+ if(b.dataset.k==SC[i][1]){say($('#fs'+i),true,'Bien vu. +10 XP');win('s'+i,'m2',10);$$(`[data-s="${i}"]`).forEach(x=>x.disabled=true)}
+ else say($('#fs'+i),false,'Ce n’est pas le bon mode. Relis la définition dans le simulateur.')});
+$('#ct').onclick=()=>{if(solved.has('t'))return;const A=[2000,10000,12000,40000],v=[0,1,2,3].map(i=>parseFloat($('#t'+i).value));
+ if(A.every((a,i)=>Math.abs(a-v[i])<.01)){say($('#ft'),true,'Parfait : 50 000 × 4 % = 2 000 ; 60 000 ÷ 6 = 10 000 ; annuité = 12 000 ; reste 40 000. +20 XP');win('t','m2',20)}
+ else say($('#ft'),false,'Une case est fausse. Intérêts = capital début × taux ; annuité = intérêts + amortissement ; capital fin = début − amortissement.')};
+
+/* Module 3 */
+const AC_=[['','Choisir un compte'],['512','512 – Banque'],['164','164 – Emprunts auprès des établissements de crédit'],['661','661 – Charges d’intérêts'],['44566','44566 – TVA déductible'],['627','627 – Services bancaires']];
+function jr(id){$('#j'+id).innerHTML='<tr><th>Compte</th><th>Sens</th><th>Montant</th></tr>'+[0,1,2].map(i=>`<tr><td><select aria-label="Compte ligne ${i+1}">${AC_.map(a=>`<option value="${a[0]}">${a[1]}</option>`).join('')}</select></td><td><select aria-label="Sens ligne ${i+1}"><option value="D">Débit</option><option value="C">Crédit</option></select></td><td><input type="number" step="any" aria-label="Montant ligne ${i+1}"></td></tr>`).join('')}
+jr('A');jr('B');jr('C');jr('D');jr('E');
+const EXP={A:['512|D|60000','164|C|60000'],B:['164|D|10000','661|D|2400','512|C|12400'],C:['661|D|2400','512|C|2400'],D:['164|D|60000','661|D|2400','512|C|62400'],E:['164|D|9045.71','661|D|2400','512|C|11445.71']};
+const MSG={C:'Écriture juste : en in fine, aucun capital n’est remboursé avant l’échéance finale. Seuls les intérêts (661) sont payés par la banque (512). +25 XP',D:'Écriture juste : à l’échéance finale, tout le capital (164) est remboursé en une fois, avec les intérêts (661). La banque est créditée de 62 400 €. +25 XP',E:'Écriture juste : l’annuité est constante (11 445,71 €), mais sa répartition change : 9 045,71 € de capital (164) et 2 400 € d’intérêts (661). +25 XP'};
+let tryA=0;
+$$('[data-j]').forEach(b=>b.onclick=()=>{const id=b.dataset.j,fb=$('#f'+id);if(solved.has('j'+id))return;
+ const L=[...$('#j'+id).querySelectorAll('tr')].slice(1).map(tr=>{const s=tr.querySelectorAll('select'),v=parseFloat(tr.querySelector('input').value);return{a:s[0].value,s:s[1].value,v}}).filter(x=>x.a||!isNaN(x.v));
+ const key=L.map(x=>`${x.a}|${x.s}|${x.v}`).sort().join(),exp=[...EXP[id]].sort().join();if(id=='A')tryA++;
+ if(key==exp){fb.className='fb ok';fb.textContent=MSG[id]?MSG[id]:id=='A'?'Écriture juste : la dette est enregistrée au crédit du 164, la banque est débitée. Pas de TVA, c’est une opération financière. +25 XP':'Écriture juste : le capital (164) et les intérêts (661) sont débités, la banque est créditée de 12 400 €. +25 XP';
+  id=='A'?S.coin():S.ok();win('j'+id,'m3',25);if(id=='A'&&tryA==1)badge('b4')}
+ else{let m='Ce n’est pas la bonne écriture.';const D=L.filter(x=>x.s=='D').reduce((t,x)=>t+(x.v||0),0),C=L.filter(x=>x.s=='C').reduce((t,x)=>t+(x.v||0),0);
+  if(L.some(x=>x.a=='44566'))m='Piège ! Un emprunt est une opération financière : pas de TVA.';
+  else if(L.some(x=>x.a=='627'))m='Le capital emprunté n’est pas un service bancaire : relis les comptes du cours (164 et 661).';
+  else if(Math.abs(D-C)>.005)m=`Le total des débits (${f0(D)}) doit être égal au total des crédits (${f0(C)}).`;
+  else if(id=='A')m='Pense à ce que reçoit l’entreprise (sa banque) et à ce qu’elle doit (une dette).';
+  else if(id=='C')m='En in fine, on ne rembourse aucun capital cette année : seuls les intérêts (60 000 × 4 %) sont enregistrés, sans compte 164.';else if(id=='D')m='À l’échéance finale, le capital de 60 000 € (164) et les intérêts (661) sont au débit ; le total payé est au crédit de la banque.';else if(id=='E')m='Amortissement = annuité − intérêts = 11 445,71 − 2 400. Les deux montants vont au débit (164 et 661), l’annuité complète au crédit de la banque.';else m='Le capital remboursé et les intérêts vont au débit ; l’argent qui sort de la banque va au crédit.';
+  fb.className='fb ko';fb.textContent=m;S.bad()}});
+render();
+</script>
+</body>
+</html>
